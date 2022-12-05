@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
 import MUIDeleteModal from './MUIDeleteModal'
+import MenuBanner from './MenuBanner'
 
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab'
@@ -47,6 +48,8 @@ const HomeScreen = () => {
             </List>;
     }
     return (
+        <div>
+        <MenuBanner/>
         <div id="playlist-selector">
             <div id="list-selector-heading">
             <Fab sx={{transform:"translate(-20%, 0%)"}}
@@ -65,6 +68,7 @@ const HomeScreen = () => {
                 }
                 <MUIDeleteModal />
             </Box>
+        </div>
         </div>)
 }
 
