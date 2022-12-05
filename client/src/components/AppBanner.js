@@ -124,13 +124,13 @@ export default function AppBanner() {
                 src={
                   "https://piazza.com/redirect/s3?bucket=uploads&prefix=paste%2Fk0ejaa6849h7ke%2F22c8d90eaf4003c2c24ca0fad72a1df99841f1b617601341110fbb45df72547a%2FScreen_Shot_2022-11-08_at_5.00.49_PM-removebg-preview.png"
                 }
-                style={{ height: "48px", paddingTop: "6%" }}
+                style={{ height: "45px", paddingTop: "6%" }}
                 alt="⬠"
               />
             </Link>
           </Typography>
           <Box sx={{ flexGrow: 1 }}>{editToolbar}</Box>
-          <Box sx={{ height: "90px", display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ height: "30px", display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"
               edge="end"

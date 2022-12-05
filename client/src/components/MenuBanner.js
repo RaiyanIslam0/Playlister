@@ -49,11 +49,11 @@ export default function PageBanner() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Publish Date (Newest)</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Name (A-Z)</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Listens (High to Low)</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Likes (High to Low)</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Disikes (High to Low)</MenuItem>
+      <MenuItem onClick={handleMenuClose}><b>Name (A-Z)</b></MenuItem>
+      <MenuItem onClick={handleMenuClose}><b>Publish Date (Newest)</b></MenuItem>
+      <MenuItem onClick={handleMenuClose}><b>Listens (High to Low)</b></MenuItem>
+      <MenuItem onClick={handleMenuClose}><b>Likes (High to Low)</b></MenuItem>
+      <MenuItem onClick={handleMenuClose}><b>Disikes (High to Low)</b></MenuItem>
     </Menu>
   );
 
@@ -76,18 +76,24 @@ export default function PageBanner() {
               style={{
                 display: "flex",
                 justifyContent: "space-between",
-                width: "8%",
-                paddingTop: 10,
+                width: "12%",
+                paddingTop: 20,
               }}
             >
               <HomeIcon />
               <GroupsIcon />
               <PersonIcon />
             </div>
-            <div style={{ width: "40%" }}>
+            <div 
+            style={{ 
+                width: "50%" ,
+                paddingTop: 10
+            
+            }}
+            >
               <form>
                 <TextField
-                  InputProps={{ sx: { width: 550 } }}
+                  InputProps={{ sx: { width: 350 } }}
                   id="search-bar"
                   className="text"
                   label="Search"

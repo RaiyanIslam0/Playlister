@@ -37,14 +37,14 @@ const HomeScreen = () => {
                 ))
                 
             }
-            <Fab sx={{transform:"translate(1150%, 10%)"}}
+            {/* <Fab sx={{transform:"translate(1150%, 10%)"}}
                 color="primary" 
                 aria-label="add"
                 id="add-list-button"
                 onClick={handleCreateNewList}
             >
                 <AddIcon />
-            </Fab>
+            </Fab> */}
             </List>;
     }
     return (
