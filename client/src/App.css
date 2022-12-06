@@ -134,9 +134,9 @@ body {
   top: 0%;
   padding-left: 25%;
   width: 50%;
-  height: 10%;
+  height: 1385px;
   text-align: center;
-  font-size: 24pt;
+  font-size: 20pt;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -145,6 +145,10 @@ body {
 
 #add-list-button {
   float: left;
+  font-weight: bold;
+  color: black;
+  background-color: white;
+  border: 1px solid black;
 }
 
 #list-selector-list {
