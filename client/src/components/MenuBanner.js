@@ -32,6 +32,28 @@ export default function PageBanner() {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
+  const handlePublishDateSort = () => {
+    store.publishDateSort();
+    handleMenuClose();
+  };
+  const handleNameSort = () => {
+    store.nameSort();
+    handleMenuClose();
+  };
+  const handleListensSort = () => {
+    store.listensSort();
+    handleMenuClose();
+  };
+  const handleLikesSort = () => {
+    store.likesSort();
+    handleMenuClose();
+  };
+  const handleDislikesSort = () => {
+    store.dislikesSort();
+    handleMenuClose();
+  };
+
   const menuId = "sort-list-menu";
   const sortMenu = (
     <Menu
@@ -49,11 +71,11 @@ export default function PageBanner() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}><b>Name (A-Z)</b></MenuItem>
-      <MenuItem onClick={handleMenuClose}><b>Publish Date (Newest)</b></MenuItem>
-      <MenuItem onClick={handleMenuClose}><b>Listens (High to Low)</b></MenuItem>
-      <MenuItem onClick={handleMenuClose}><b>Likes (High to Low)</b></MenuItem>
-      <MenuItem onClick={handleMenuClose}><b>Disikes (High to Low)</b></MenuItem>
+      <MenuItem onClick={handleNameSort}>Name (A-Z)</MenuItem>
+      <MenuItem onClick={handlePublishDateSort}>Publish Date (Newest)</MenuItem>
+      <MenuItem onClick={handleListensSort}>Listens (High to Low)</MenuItem>
+      <MenuItem onClick={handleLikesSort}>Likes (High to Low)</MenuItem>
+      <MenuItem onClick={handleDislikesSort}>Disikes (High to Low)</MenuItem>
     </Menu>
   );
 

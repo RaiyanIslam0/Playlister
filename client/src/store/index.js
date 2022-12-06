@@ -33,6 +33,7 @@ export const GlobalStoreActionType = {
   REMOVE_SONG: "REMOVE_SONG",
   HIDE_MODALS: "HIDE_MODALS",
   DUPLICATE_LIST: "DUPLICATE_LIST",
+  SORT_BY: "SORT_BY",
 };
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -46,13 +47,13 @@ const CurrentModal = {
     ERROR : "ERROR"
 }
 
-const sort = {
+/*const sort = {
   PUBLISH_DATE: "PUBLISH_DATE",
   NAME: "NAME",
   LISTENS: "LISTENS",
   LIKES: "LIKES",
   DISLIKES: "DISLIKES",
-};
+};*/
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
 // AVAILABLE TO THE REST OF THE APPLICATION
@@ -67,7 +68,7 @@ function GlobalStoreContextProvider(props) {
         newListCounter: 0,
         listNameActive: false,
         listIdMarkedForDeletion: null,
-        listMarkedForDeletion: null
+        listMarkedForDeletion: null,
     });
     const history = useHistory();
 
@@ -407,6 +408,46 @@ function GlobalStoreContextProvider(props) {
       asyncUpdateCurrentList();
     };
 
+     store.publishDateSort = async function () {
+       store.idNamePairs.sort(function (a, b) {
+         if (!a.published) return 1;
+         if (!b.published) return -1;
+         return new Date(b.date) - new Date(a.date);
+       });
+       history.push("/");
+     };
+     store.nameSort = async function () {
+       store.idNamePairs.sort(function (a, b) {
+         if (a.name.toLowerCase() < b.name.toLowerCase()) {
+           return -1;
+         }
+         if (a.name.toLowerCase > b.name.toLowerCase) {
+           return 1;
+         }
+         return 0;
+       });
+       history.push("/");
+     };
+     store.listensSort = async function () {
+       store.idNamePairs.sort(function (a, b) {
+         return b.listens - a.listens;
+       });
+       history.push("/");
+     };
+     store.likesSort = async function () {
+       store.idNamePairs.sort(function (a, b) {
+         return b.likes - a.likes;
+       });
+       history.push("/");
+     };
+     store.dislikesSort = async function () {
+       store.idNamePairs.sort(function (a, b) {
+         return b.dislikes - a.dislikes;
+       });
+       history.push("/");
+     };
+
+
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = function () {
         async function asyncLoadIdNamePairs() {
@@ -414,6 +455,11 @@ function GlobalStoreContextProvider(props) {
             if (response.data.success) {
                 let pairsArray = response.data.idNamePairs;
                 console.log(pairsArray);
+                pairsArray.sort(function (a, b) {
+                  if (!a.published) return 1;
+                  if (!b.published) return -1;
+                  return new Date(b.date) - new Date(a.date);
+                });
                 storeReducer({
                     type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                     payload: pairsArray
