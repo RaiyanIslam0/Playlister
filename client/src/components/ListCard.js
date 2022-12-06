@@ -14,6 +14,8 @@ import workspace from "./WorkspaceScreen";
 import WorkspaceScreen from "./WorkspaceScreen";
 import List from "@mui/material/List";
 import EditToolbar from "./EditToolbar";
+import Button from "@mui/material/Button";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 /*
     This is a card in our list of top 5 lists. It lets select
@@ -28,6 +30,15 @@ function ListCard(props) {
     const [text, setText] = useState("");
     const { idNamePair, selected, expanded } = props;
     let showList = false;
+
+    const theme = createTheme({
+      palette: {
+        purple: {
+          main: "#5F23A5",
+          contrastText: "#f5f5f5",
+        },
+      },
+    });
 
     function handleLoadList(event, id) {
         console.log("handleLoadList for " + id);
@@ -73,6 +84,23 @@ function ListCard(props) {
     function handleUpdateText(event) {
         setText(event.target.value);
     }
+    let modalJSX = "";
+    if (store.isEditSongModalOpen()) {
+      modalJSX = <MUIEditSongModal />;
+    } else if (store.isRemoveSongModalOpen()) {
+      modalJSX = <MUIRemoveSongModal />;
+    }
+
+    function handleDuplicateList(event) {
+      event.stopPropagation();
+      store.duplicateList();
+    }
+
+    function handlePublish(event) {
+      event.stopPropagation();
+      store.publish();
+    }
+
 
         function handleOpenList(e) {
           let button = document.getElementById(
@@ -87,33 +115,91 @@ function ListCard(props) {
           }
         }
         let songList = "";
+         let toolbar = <EditToolbar />;
+    let publishButton = '';
+    let buttonsStyle = {
+      padding: "10px 15px 0px 10px",
+      display: "flex",
+      justifyContent: "space-between",
+      width: "28%",
+    };
+    let flexStyle = {
+      display: "flex",
+      width: "100%",
+      justifyContent: "end",
+      padding: 5,
+    };
+    if (!idNamePair.published) {
+        publishButton = (
+          <Button
+            variant="contained"
+            color="purple"
+            onClick={(event) => {
+                handlePublish(event)
+            }}
+          >
+            Publish
+          </Button>
+        );
+        buttonsStyle = {
+            padding: "10px 15px 0px 10px",
+            display: "flex",
+            justifyContent: "space-between",
+            width: "39%",
+        };
+        flexStyle = {
+            display: "flex",
+            width: "100%",
+            justifyContent: "space-between",
+            padding: 5,
+        }
+    }
         if (store.currentList) {
           if (store.currentList._id == idNamePair._id) {
+            if (store.currentList.published) {
+              toolbar = "";
+            }
             songList = (
               <div>
-                <List
-                  id="playlist-cards"
-                  sx={{ width: "100%", bgcolor: "#404040" }}
-                >
-                  {store.currentList.songs.map((song, index) => (
-                    <SongCard
-                      id={"playlist-song-" + index}
-                      key={"playlist-song-" + index}
-                      index={index}
-                      song={song}
-                    />
-                  ))}
-                </List>
-                <div
-                  style={{
-                    display: "flex",
-                    width: "100%",
-                    justifyContent: "space-between",
-                    padding: 5,
-                  }}
-                >
-                  <EditToolbar />
-                </div>
+                <ThemeProvider theme={theme}>
+                  <List
+                    id="playlist-cards"
+                    sx={{ width: "100%", bgcolor: "#404040" }}
+                  >
+                    {store.currentList.songs.map((song, index) => (
+                      <SongCard
+                        id={"playlist-song-" + index}
+                        key={"playlist-song-" + index}
+                        index={index}
+                        song={song}
+                      />
+                    ))}
+                  </List>
+                  <div style={flexStyle}>
+                    {toolbar}
+                    <div style={buttonsStyle}>
+                      <Button
+                        variant="contained"
+                        color="purple"
+                        onClick={(event) => {
+                          handleDuplicateList(event);
+                        }}
+                      >
+                        Duplicate
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="purple"
+                        onClick={(event) => {
+                          handleDeleteList(event, idNamePair._id);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                      {publishButton}
+                    </div>
+                  </div>
+                </ThemeProvider>
               </div>
             );
           }
@@ -127,6 +213,12 @@ function ListCard(props) {
     let cardStatus = false;
     if (store.isListNameEditActive) {
         cardStatus = true;
+    }
+
+
+    let publishDate = "";
+    if (idNamePair.published) {
+      publishDate = idNamePair.publishDate.toString().substring(0, 10);
     }
     let cardElement =
         <ListItem
@@ -152,7 +244,7 @@ function ListCard(props) {
                 {songList}
             </div> 
             <div style={{display: 'flex', width: '100%', fontSize: '16px', justifyContent: 'space-between', padding: 10}}>
-                <div style={{padding: '0px 20px 0px 20px'}}>Created: {idNamePair.date.toString().substring(0, 10)}</div>
+                <div style={{padding: '0px 20px 0px 20px'}}>Published: {publishDate}</div>
                 <div style={{padding: '0px 20px 0px 20px'}}>Listens: {idNamePair.listens}</div>
                 <div><img id={'expandButton-' + idNamePair._id} onClick={handleOpenList} src={"https://cdn0.iconfinder.com/data/icons/glyphpack/26/double-arrow-down-1024.png"} style={{width: '24px', padding: '0px 20px 0px 20px', cursor: 'pointer'}}></img></div>
             </div>
@@ -181,12 +273,10 @@ function ListCard(props) {
       //cardElement
       <Box>
         {cardElement}
-        <MUIRemoveSongModal />
-        <MUIEditSongModal />
+        {modalJSX}
       </Box>
     );
 }
 
 export default ListCard;
 
-//<MUIEditSongModal /> at line 185

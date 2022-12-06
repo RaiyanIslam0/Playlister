@@ -22,17 +22,18 @@ console.log("create GlobalStoreContext");
 // THESE ARE ALL THE TYPES OF UPDATES TO OUR GLOBAL
 // DATA STORE STATE THAT CAN BE PROCESSED
 export const GlobalStoreActionType = {
-    CHANGE_LIST_NAME: "CHANGE_LIST_NAME",
-    CLOSE_CURRENT_LIST: "CLOSE_CURRENT_LIST",
-    CREATE_NEW_LIST: "CREATE_NEW_LIST",
-    LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
-    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
-    SET_CURRENT_LIST: "SET_CURRENT_LIST",
-    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
-    EDIT_SONG: "EDIT_SONG",
-    REMOVE_SONG: "REMOVE_SONG",
-    HIDE_MODALS: "HIDE_MODALS"
-}
+  CHANGE_LIST_NAME: "CHANGE_LIST_NAME",
+  CLOSE_CURRENT_LIST: "CLOSE_CURRENT_LIST",
+  CREATE_NEW_LIST: "CREATE_NEW_LIST",
+  LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
+  MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
+  SET_CURRENT_LIST: "SET_CURRENT_LIST",
+  SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+  EDIT_SONG: "EDIT_SONG",
+  REMOVE_SONG: "REMOVE_SONG",
+  HIDE_MODALS: "HIDE_MODALS",
+  DUPLICATE_LIST: "DUPLICATE_LIST",
+};
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
 const tps = new jsTPS();
@@ -44,6 +45,14 @@ const CurrentModal = {
     REMOVE_SONG : "REMOVE_SONG",
     ERROR : "ERROR"
 }
+
+const sort = {
+  PUBLISH_DATE: "PUBLISH_DATE",
+  NAME: "NAME",
+  LISTENS: "LISTENS",
+  LIKES: "LIKES",
+  DISLIKES: "DISLIKES",
+};
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
 // AVAILABLE TO THE REST OF THE APPLICATION
@@ -73,146 +82,159 @@ function GlobalStoreContextProvider(props) {
     const storeReducer = (action) => {
         const { type, payload } = action;
         switch (type) {
-            // LIST UPDATE OF ITS NAME
-            case GlobalStoreActionType.CHANGE_LIST_NAME: {
-                return setStore({
-                    currentModal : CurrentModal.NONE,
-                    idNamePairs: payload.idNamePairs,
-                    currentList: payload.playlist,
-                    currentSongIndex: -1,
-                    currentSong: null,
-                    newListCounter: store.newListCounter,
-                    listNameActive: false,
-                    listIdMarkedForDeletion: null,
-                    listMarkedForDeletion: null
-                });
-            }
-            // STOP EDITING THE CURRENT LIST
-            case GlobalStoreActionType.CLOSE_CURRENT_LIST: {
-                return setStore({
-                    currentModal : CurrentModal.NONE,
-                    idNamePairs: store.idNamePairs,
-                    currentList: null,
-                    currentSongIndex: -1,
-                    currentSong: null,
-                    newListCounter: store.newListCounter,
-                    listNameActive: false,
-                    listIdMarkedForDeletion: null,
-                    listMarkedForDeletion: null
-                })
-            }
-            // CREATE A NEW LIST
-            case GlobalStoreActionType.CREATE_NEW_LIST: {                
-                return setStore({
-                    currentModal : CurrentModal.NONE,
-                    idNamePairs: store.idNamePairs,
-                    currentList: payload,
-                    currentSongIndex: -1,
-                    currentSong: null,
-                    newListCounter: store.newListCounter + 1,
-                    listNameActive: false,
-                    listIdMarkedForDeletion: null,
-                    listMarkedForDeletion: null
-                })
-            }
-            // GET ALL THE LISTS SO WE CAN PRESENT THEM
-            case GlobalStoreActionType.LOAD_ID_NAME_PAIRS: {
-                return setStore({
-                    currentModal : CurrentModal.NONE,
-                    idNamePairs: payload,
-                    currentList: null,
-                    currentSongIndex: -1,
-                    currentSong: null,
-                    newListCounter: store.newListCounter,
-                    listNameActive: false,
-                    listIdMarkedForDeletion: null,
-                    listMarkedForDeletion: null
-                });
-            }
-            // PREPARE TO DELETE A LIST
-            case GlobalStoreActionType.MARK_LIST_FOR_DELETION: {
-                return setStore({
-                    currentModal : CurrentModal.DELETE_LIST,
-                    idNamePairs: store.idNamePairs,
-                    currentList: null,
-                    currentSongIndex: -1,
-                    currentSong: null,
-                    newListCounter: store.newListCounter,
-                    listNameActive: false,
-                    listIdMarkedForDeletion: payload.id,
-                    listMarkedForDeletion: payload.playlist
-                });
-            }
-            // UPDATE A LIST
-            case GlobalStoreActionType.SET_CURRENT_LIST: {
-                return setStore({
-                    currentModal : CurrentModal.NONE,
-                    idNamePairs: store.idNamePairs,
-                    currentList: payload,
-                    currentSongIndex: -1,
-                    currentSong: null,
-                    newListCounter: store.newListCounter,
-                    listNameActive: false,
-                    listIdMarkedForDeletion: null,
-                    listMarkedForDeletion: null
-                });
-            }
-            // START EDITING A LIST NAME
-            case GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE: {
-                return setStore({
-                    currentModal : CurrentModal.NONE,
-                    idNamePairs: store.idNamePairs,
-                    currentList: payload,
-                    currentSongIndex: -1,
-                    currentSong: null,
-                    newListCounter: store.newListCounter,
-                    listNameActive: true,
-                    listIdMarkedForDeletion: null,
-                    listMarkedForDeletion: null
-                });
-            }
-            // 
-            case GlobalStoreActionType.EDIT_SONG: {
-                return setStore({
-                    currentModal : CurrentModal.EDIT_SONG,
-                    idNamePairs: store.idNamePairs,
-                    currentList: store.currentList,
-                    currentSongIndex: payload.currentSongIndex,
-                    currentSong: payload.currentSong,
-                    newListCounter: store.newListCounter,
-                    listNameActive: false,
-                    listIdMarkedForDeletion: null,
-                    listMarkedForDeletion: null
-                });
-            }
-            case GlobalStoreActionType.REMOVE_SONG: {
-                return setStore({
-                    currentModal : CurrentModal.REMOVE_SONG,
-                    idNamePairs: store.idNamePairs,
-                    currentList: store.currentList,
-                    currentSongIndex: payload.currentSongIndex,
-                    currentSong: payload.currentSong,
-                    newListCounter: store.newListCounter,
-                    listNameActive: false,
-                    listIdMarkedForDeletion: null,
-                    listMarkedForDeletion: null
-                });
-            }
-            case GlobalStoreActionType.HIDE_MODALS: {
-                return setStore({
-                    currentModal : CurrentModal.NONE,
-                    idNamePairs: store.idNamePairs,
-                    currentList: store.currentList,
-                    currentSongIndex: -1,
-                    currentSong: null,
-                    newListCounter: store.newListCounter,
-                    listNameActive: false,
-                    listIdMarkedForDeletion: null,
-                    listMarkedForDeletion: null
-                });
-            }
-            default:
-                return store;
+          // LIST UPDATE OF ITS NAME
+          case GlobalStoreActionType.CHANGE_LIST_NAME: {
+            return setStore({
+              currentModal: CurrentModal.NONE,
+              idNamePairs: payload.idNamePairs,
+              currentList: payload.playlist,
+              currentSongIndex: -1,
+              currentSong: null,
+              newListCounter: store.newListCounter,
+              listNameActive: false,
+              listIdMarkedForDeletion: null,
+              listMarkedForDeletion: null,
+            });
+          }
+          // STOP EDITING THE CURRENT LIST
+          case GlobalStoreActionType.CLOSE_CURRENT_LIST: {
+            return setStore({
+              currentModal: CurrentModal.NONE,
+              idNamePairs: store.idNamePairs,
+              currentList: null,
+              currentSongIndex: -1,
+              currentSong: null,
+              newListCounter: store.newListCounter,
+              listNameActive: false,
+              listIdMarkedForDeletion: null,
+              listMarkedForDeletion: null,
+            });
+          }
+          // CREATE A NEW LIST
+          case GlobalStoreActionType.CREATE_NEW_LIST: {
+            return setStore({
+              currentModal: CurrentModal.NONE,
+              idNamePairs: store.idNamePairs,
+              currentList: payload,
+              currentSongIndex: -1,
+              currentSong: null,
+              newListCounter: store.newListCounter + 1,
+              listNameActive: false,
+              listIdMarkedForDeletion: null,
+              listMarkedForDeletion: null,
+            });
+          }
+          // GET ALL THE LISTS SO WE CAN PRESENT THEM
+          case GlobalStoreActionType.LOAD_ID_NAME_PAIRS: {
+            return setStore({
+              currentModal: CurrentModal.NONE,
+              idNamePairs: payload,
+              currentList: null,
+              currentSongIndex: -1,
+              currentSong: null,
+              newListCounter: store.newListCounter,
+              listNameActive: false,
+              listIdMarkedForDeletion: null,
+              listMarkedForDeletion: null,
+            });
+          }
+          // PREPARE TO DELETE A LIST
+          case GlobalStoreActionType.MARK_LIST_FOR_DELETION: {
+            return setStore({
+              currentModal: CurrentModal.DELETE_LIST,
+              idNamePairs: store.idNamePairs,
+              currentList: null,
+              currentSongIndex: -1,
+              currentSong: null,
+              newListCounter: store.newListCounter,
+              listNameActive: false,
+              listIdMarkedForDeletion: payload.id,
+              listMarkedForDeletion: payload.playlist,
+            });
+          }
+          // UPDATE A LIST
+          case GlobalStoreActionType.SET_CURRENT_LIST: {
+            return setStore({
+              currentModal: CurrentModal.NONE,
+              idNamePairs: store.idNamePairs,
+              currentList: payload,
+              currentSongIndex: -1,
+              currentSong: null,
+              newListCounter: store.newListCounter,
+              listNameActive: false,
+              listIdMarkedForDeletion: null,
+              listMarkedForDeletion: null,
+            });
+          }
+          // START EDITING A LIST NAME
+          case GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE: {
+            return setStore({
+              currentModal: CurrentModal.NONE,
+              idNamePairs: store.idNamePairs,
+              currentList: payload,
+              currentSongIndex: -1,
+              currentSong: null,
+              newListCounter: store.newListCounter,
+              listNameActive: true,
+              listIdMarkedForDeletion: null,
+              listMarkedForDeletion: null,
+            });
+          }
+          //
+          case GlobalStoreActionType.EDIT_SONG: {
+            return setStore({
+              currentModal: CurrentModal.EDIT_SONG,
+              idNamePairs: store.idNamePairs,
+              currentList: store.currentList,
+              currentSongIndex: payload.currentSongIndex,
+              currentSong: payload.currentSong,
+              newListCounter: store.newListCounter,
+              listNameActive: false,
+              listIdMarkedForDeletion: null,
+              listMarkedForDeletion: null,
+            });
+          }
+          case GlobalStoreActionType.REMOVE_SONG: {
+            return setStore({
+              currentModal: CurrentModal.REMOVE_SONG,
+              idNamePairs: store.idNamePairs,
+              currentList: store.currentList,
+              currentSongIndex: payload.currentSongIndex,
+              currentSong: payload.currentSong,
+              newListCounter: store.newListCounter,
+              listNameActive: false,
+              listIdMarkedForDeletion: null,
+              listMarkedForDeletion: null,
+            });
+          }
+          case GlobalStoreActionType.HIDE_MODALS: {
+            return setStore({
+              currentModal: CurrentModal.NONE,
+              idNamePairs: store.idNamePairs,
+              currentList: store.currentList,
+              currentSongIndex: -1,
+              currentSong: null,
+              newListCounter: store.newListCounter,
+              listNameActive: false,
+              listIdMarkedForDeletion: null,
+              listMarkedForDeletion: null,
+            });
+          }
+          case GlobalStoreActionType.DUPLICATE_LIST: {
+            return setStore({
+              currentModal: CurrentModal.NONE,
+              idNamePairs: store.idNamePairs,
+              currentList: payload,
+              currentSongIndex: -1,
+              currentSong: null,
+              newListCounter: store.newListCounter + 1,
+              listNameActive: false,
+              listIdMarkedForDeletion: null,
+              listMarkedForDeletion: null,
+            });
+          }
+          default:
+            return store;
         }
     }
 
@@ -304,6 +326,86 @@ function GlobalStoreContextProvider(props) {
         }
          history.push("/");
     }
+
+    store.duplicateList = async function () {
+        async function asyncDuplicateList() {
+            let response = await api.getPlaylistById(store.currentList._id);
+            if (response.data.success) {
+                let playlistToCopy = response.data.playlist
+                console.log(playlistToCopy)
+                let playlistName = "Copy of " + playlistToCopy.name
+                let response1 = await api.createPlaylist(playlistName, [], auth.user.email, auth.user.userName, 0, 0, []);
+                if (response1.status === 201) {
+                    playlistToCopy.name = playlistName
+                    playlistToCopy.songs = playlistToCopy.songs;
+                    playlistToCopy.comments = [];
+                    playlistToCopy.likes = 0;
+                    playlistToCopy.dislikes = 0;
+                    playlistToCopy.listens = 0;
+                    playlistToCopy.published = false;
+                    playlistToCopy.publishDate = new Date();
+                    console.log(playlistToCopy);
+                    let response2 = await api.updatePlaylistById(response1.data.playlist._id, playlistToCopy)
+                    console.log(response1.data.playlist._id);
+                    if (response2.data.success) {
+                        tps.clearAllTransactions();
+                        storeReducer({
+                            type: GlobalStoreActionType.DUPLICATE_LIST,
+                            payload: response2.data.playlist
+                        });
+                        console.log(response2.data)
+                        history.push("/playlist/" + response2.data.id);
+                        history.push("/");
+                    }
+                } else {
+                    console.log("API FAILED TO CREATE A NEW LIST");
+                }
+            }
+        }
+        asyncDuplicateList();
+    }
+
+    store.handleSearch = async function () {
+      let searchBar = document.getElementById("search-bar");
+      let searchFilter = function (idNamePair) {
+        let name = idNamePair.name.toLowerCase();
+        let search = searchBar.value.toLowerCase();
+        return name.includes(search);
+      };
+      if (searchBar.value != "") {
+        let response = await api.getPlaylistPairs();
+        if (response.data.success) {
+          let pairsArray = response.data.idNamePairs;
+          store.idNamePairs = pairsArray.filter(searchFilter);
+          console.log(store.idNamePairs);
+        }
+      } else {
+        store.loadIdNamePairs();
+      }
+      history.push("/");
+    };
+
+    store.publish = function () {
+      store.currentList.published = true;
+      store.currentList.publishDate = new Date();
+      console.log(store.currentList);
+      async function asyncUpdateCurrentList() {
+        console.log(store.currentList);
+        const response = await api.updatePlaylistById(
+          store.currentList._id,
+          store.currentList
+        );
+        if (response.data.success) {
+          history.push("/playlist/" + store.currentList._id);
+          storeReducer({
+            type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
+            payload: {},
+          });
+          history.push("/");
+        }
+      }
+      asyncUpdateCurrentList();
+    };
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = function () {

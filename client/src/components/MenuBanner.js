@@ -84,12 +84,11 @@ export default function PageBanner() {
               <GroupsIcon />
               <PersonIcon />
             </div>
-            <div 
-            style={{ 
-                width: "50%" ,
-                paddingTop: 10
-            
-            }}
+            <div
+              style={{
+                width: "50%",
+                paddingTop: 10,
+              }}
             >
               <form>
                 <TextField
@@ -101,7 +100,7 @@ export default function PageBanner() {
                   placeholder=""
                   size="small"
                 />
-                <IconButton type="submit" aria-label="search">
+                <IconButton aria-label="search" onClick={store.handleSearch}>
                   <SearchIcon style={{ fill: "whitesmoke" }} />
                 </IconButton>
               </form>

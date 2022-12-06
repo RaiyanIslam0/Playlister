@@ -7,21 +7,35 @@ const Schema = mongoose.Schema
     @author McKilla Gorilla
 */
 const playlistSchema = new Schema(
-    {
-        name: { type: String, required: true },
-        ownerEmail: { type: String, required: true },
-        songs: { type: [{
-            title: String,
-            artist: String,
-            youTubeId: String
-        }], required: true },
-        likes: { type: Number, required: true},
-        dislikes: { type: Number, required: true},
-        comments: { type: [{comment: String}], required: true},
-        published: { type: Boolean, required: true},
-        listens: {type: Number, required: true}
+  {
+    name: { type: String, required: true },
+    ownerEmail: { type: String, required: true },
+    songs: {
+      type: [
+        {
+          title: String,
+          artist: String,
+          youTubeId: String,
+        },
+      ],
+      required: true,
     },
-    { timestamps: true },
-)
+    likes: { type: Number, required: true },
+    dislikes: { type: Number, required: true },
+    comments: {
+      type: [
+        {
+          comment: String,
+          user: String,
+        },
+      ],
+      required: true,
+    },
+    published: { type: Boolean, required: true },
+    listens: { type: Number, required: true },
+    publishDate: { type: Date, required: true },
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model('Playlist', playlistSchema)

@@ -157,6 +157,8 @@ getPlaylistPairs = async (req, res) => {
                           date: list.createdAt,
                           listens: list.listens,
                           songs: list.songs,
+                          published: list.published,
+                          publishDate: list.publishDate,
                         };
                         pairs.push(pair);
                     }
@@ -222,6 +224,12 @@ updatePlaylist = async (req, res) => {
 
                     list.name = body.playlist.name;
                     list.songs = body.playlist.songs;
+                    list.comments = body.playlist.comments;
+                    list.likes = body.playlist.likes;
+                    list.dislikes = body.playlist.dislikes;
+                    list.listens = body.playlist.listens;
+                    list.published = body.playlist.published;
+                    list.publishDate = body.playlist.publishDate;
                     list
                         .save()
                         .then(() => {
@@ -255,5 +263,5 @@ module.exports = {
     getPlaylistById,
     getPlaylistPairs,
     getPlaylists,
-    updatePlaylist
+    updatePlaylist,
 }
