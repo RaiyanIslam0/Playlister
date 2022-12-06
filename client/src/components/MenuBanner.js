@@ -27,8 +27,7 @@ export default function PageBanner() {
   const theme = createTheme({
     palette: {
       buttons: {
-        main: "#303030",
-        contrastText: "#f5f5f5",
+        contrastText: "black",
       },
     },
   });
@@ -132,7 +131,7 @@ export default function PageBanner() {
       <AppBar
         position="static"
         id="PageBanner"
-        style={{ backgroundColor: "transparent" }}
+        style={{ backgroundColor: "lightgrey" }}
       >
         <Toolbar>
           <div
@@ -147,7 +146,7 @@ export default function PageBanner() {
                 display: "flex",
                 justifyContent: "space-between",
                 width: "10%",
-                paddingTop: 10,
+                paddingTop: 6,
               }}
             >
               <ThemeProvider theme={theme}>
@@ -167,14 +166,14 @@ export default function PageBanner() {
                 </Fab>
               </ThemeProvider>
             </div>
-            <div style={{ width: "40%" }}>
+            <div style={{ width: "70%",paddingTop:"5px", paddingLeft:"50px" }}>
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                 }}
               >
                 <TextField
-                  InputProps={{ sx: { width: 550, color: "whitesmoke" } }}
+                  InputProps={{ sx: { width: 550, color: "black", backgroundColor:"white" } }}
                   id="search-bar"
                   className="text"
                   label="Search"
@@ -188,12 +187,12 @@ export default function PageBanner() {
                   }}
                 />
                 <IconButton aria-label="search" onClick={store.handleSearch}>
-                  <SearchIcon style={{ fill: "whitesmoke" }} />
+                  <SearchIcon style={{ fill: "black" }} />
                 </IconButton>
               </form>
             </div>
 
-            <div>
+            <div style={{color:"black",fontWeight: "bold",fontSize:"20px"}}>
               Sort by
               <IconButton
                 size="large"
