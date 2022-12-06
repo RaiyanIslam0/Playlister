@@ -3,6 +3,7 @@ import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
 import MUIDeleteModal from './MUIDeleteModal'
 import MenuBanner from './MenuBanner'
+import YoutubePlayer from './YoutubePlayer'
 
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab'
@@ -67,6 +68,7 @@ const HomeScreen = () => {
           {listCard}
           <MUIDeleteModal />
         </div>
+        <YoutubePlayer/>
       </div>
       <div id="player"></div>
     </div>
