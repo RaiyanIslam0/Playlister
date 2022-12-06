@@ -7,6 +7,14 @@ import IconButton from '@mui/material/IconButton';
 import ListItem from '@mui/material/ListItem';
 import TextField from '@mui/material/TextField';
 
+import SongCard from "./SongCard.js";
+import MUIEditSongModal from "./MUIEditSongModal";
+import MUIRemoveSongModal from "./MUIRemoveSongModal";
+import workspace from "./WorkspaceScreen";
+import WorkspaceScreen from "./WorkspaceScreen";
+import List from "@mui/material/List";
+import EditToolbar from "./EditToolbar";
+
 /*
     This is a card in our list of top 5 lists. It lets select
     a list for editing and it has controls for changing its 
@@ -18,7 +26,8 @@ function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
     const [text, setText] = useState("");
-    const { idNamePair, selected } = props;
+    const { idNamePair, selected, expanded } = props;
+    let showList = false;
 
     function handleLoadList(event, id) {
         console.log("handleLoadList for " + id);
@@ -65,6 +74,52 @@ function ListCard(props) {
         setText(event.target.value);
     }
 
+        function handleOpenList(e) {
+          let button = document.getElementById(
+            "expandButton-" + idNamePair._id
+          );
+
+          if (!store.currentList) {
+            handleLoadList(e, idNamePair._id);
+            button.style.transform = "rotate(180deg)";
+          } else {
+            store.closeCurrentList();
+          }
+        }
+        let songList = "";
+        if (store.currentList) {
+          if (store.currentList._id == idNamePair._id) {
+            songList = (
+              <div>
+                <List
+                  id="playlist-cards"
+                  sx={{ width: "100%", bgcolor: "#404040" }}
+                >
+                  {store.currentList.songs.map((song, index) => (
+                    <SongCard
+                      id={"playlist-song-" + index}
+                      key={"playlist-song-" + index}
+                      index={index}
+                      song={song}
+                    />
+                  ))}
+                </List>
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-between",
+                    padding: 5,
+                  }}
+                >
+                  <EditToolbar />
+                </div>
+              </div>
+            );
+          }
+        }
+
+
     let selectClass = "unselected-list-card";
     if (selected) {
         selectClass = "selected-list-card";
@@ -78,25 +133,29 @@ function ListCard(props) {
             id={idNamePair._id}
             key={idNamePair._id}
             sx={{borderRadius:"25px", p: "10px", bgcolor: '#c5c5ea', marginTop: '7px', display: 'flex', p: 1 }}
-            style={{transform:"translate(1%,0%)", width: '98%', fontSize: '22pt' }}
+            style={{transform:"translate(1%,0%)", width: '98%', fontSize: '22pt', display: 'flex', flexDirection: "column", cursor: 'default' }}
             button
-            onClick={(event) => {
-                handleLoadList(event, idNamePair._id)
-            }}
+            //onClick={(event) => {
+            //    handleLoadList(event, idNamePair._id)
+            //}}
+            onDoubleClick= {handleToggleEdit}
         >
-            <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
-            <Box sx={{ p: 1 }}>
-                <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                    <EditIcon style={{fontSize:'28pt'}} />
-                </IconButton>
-            </Box>
-            <Box sx={{ p: 1 }}>
-                <IconButton onClick={(event) => {
-                        handleDeleteList(event, idNamePair._id)
-                    }} aria-label='delete'>
-                    <DeleteIcon style={{fontSize:'28pt'}} />
-                </IconButton>
-            </Box>
+             <div style={{display: 'flex', width: '100%'}}> 
+                <Box sx={{ p: 1, flexGrow: 1, overflowX: 'auto' }}>{idNamePair.name}<br></br>
+                    <div style={{fontSize: '12pt', paddingLeft: '10px'}}>by: {idNamePair.userName}</div>
+                </Box>
+                <div style={{paddingRight: 5}}><img src={"https://cdn3.iconfinder.com/data/icons/linecons-free-vector-icons-pack/32/like-128.png"} style={{width: '48px'}} /> {idNamePair.likes} <img src={"https://cdn4.iconfinder.com/data/icons/doodle-3/160/thumbs-down-512.png"} style={{width: '48px'}} /> {idNamePair.dislikes}</div>
+            </div>
+
+            <div  
+            style={{width: '100%', padding: 10}}>
+                {songList}
+            </div> 
+            <div style={{display: 'flex', width: '100%', fontSize: '16px', justifyContent: 'space-between', padding: 10}}>
+                <div style={{padding: '0px 20px 0px 20px'}}>Created: {idNamePair.date.toString().substring(0, 10)}</div>
+                <div style={{padding: '0px 20px 0px 20px'}}>Listens: {idNamePair.listens}</div>
+                <div><img id={'expandButton-' + idNamePair._id} onClick={handleOpenList} src={"https://cdn0.iconfinder.com/data/icons/glyphpack/26/double-arrow-down-1024.png"} style={{width: '24px', padding: '0px 20px 0px 20px', cursor: 'pointer'}}></img></div>
+            </div>
         </ListItem>
 
     if (editActive) {
@@ -119,8 +178,15 @@ function ListCard(props) {
             />
     }
     return (
-        cardElement
+      //cardElement
+      <Box>
+        {cardElement}
+        <MUIRemoveSongModal />
+        <MUIEditSongModal />
+      </Box>
     );
 }
 
 export default ListCard;
+
+//<MUIEditSongModal /> at line 185

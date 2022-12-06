@@ -7,17 +7,27 @@ console.log("create AuthContext: " + AuthContext);
 
 // THESE ARE ALL THE TYPES OF UPDATES TO OUR AUTH STATE THAT CAN BE PROCESSED
 export const AuthActionType = {
-    GET_LOGGED_IN: "GET_LOGGED_IN",
-    LOGIN_USER: "LOGIN_USER",
-    LOGOUT_USER: "LOGOUT_USER",
-    REGISTER_USER: "REGISTER_USER"
-}
+  GET_LOGGED_IN: "GET_LOGGED_IN",
+  LOGIN_USER: "LOGIN_USER",
+  LOGOUT_USER: "LOGOUT_USER",
+  REGISTER_USER: "REGISTER_USER",
+  ERROR: "ERROR",
+};
+
+const view = {
+  NONE: "NONE",
+  HOME: "HOME",
+  ALL_LISTS: "ALL_LISTS",
+  USERS: "USERS",
+};
+
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
-        user: null,
-        loggedIn: false,
-        errorMessage: null
+      user: null,
+      loggedIn: false,
+      errorMessage: null,
+      view: view.NONE,
     });
     const history = useHistory();
 
@@ -28,36 +38,48 @@ function AuthContextProvider(props) {
     const authReducer = (action) => {
         const { type, payload } = action;
         switch (type) {
-            case AuthActionType.GET_LOGGED_IN: {
-                return setAuth({
-                    user: payload.user,
-                    loggedIn: payload.loggedIn,
-                    errorMessage: null
-                });
-            }
-            case AuthActionType.LOGIN_USER: {
-                return setAuth({
-                    user: payload.user,
-                    loggedIn: payload.loggedIn,
-                    errorMessage: payload.errorMessage
-                })
-            }
-            case AuthActionType.LOGOUT_USER: {
-                return setAuth({
-                    user: null,
-                    loggedIn: false,
-                    errorMessage: null
-                })
-            }
-            case AuthActionType.REGISTER_USER: {
-                return setAuth({
-                    user: payload.user,
-                    loggedIn: payload.loggedIn,
-                    errorMessage: payload.errorMessage
-                })
-            }
-            default:
-                return auth;
+          case AuthActionType.GET_LOGGED_IN: {
+            return setAuth({
+              user: payload.user,
+              loggedIn: payload.loggedIn,
+              errorMessage: null,
+              view: auth.view,
+            });
+          }
+          case AuthActionType.LOGIN_USER: {
+            return setAuth({
+              user: payload.user,
+              loggedIn: payload.loggedIn,
+              errorMessage: payload.errorMessage,
+              view: view.HOME,
+            });
+          }
+          case AuthActionType.LOGOUT_USER: {
+            return setAuth({
+              user: null,
+              loggedIn: false,
+              errorMessage: null,
+              view: view.NONE,
+            });
+          }
+          case AuthActionType.REGISTER_USER: {
+            return setAuth({
+              user: payload.user,
+              loggedIn: payload.loggedIn,
+              errorMessage: payload.errorMessage,
+              view: view.NONE,
+            });
+          }
+          case AuthActionType.ERROR: {
+            return setAuth({
+              user: null,
+              loggedIn: false,
+              errorMessage: payload.errorMessage,
+              view: auth.view,
+            });
+          }
+          default:
+            return auth;
         }
     }
 
@@ -90,7 +112,7 @@ function AuthContextProvider(props) {
                 })
                 history.push("/login");
                 console.log("NOW WE LOGIN");
-                auth.loginUser(email, password);
+                //auth.loginUser(email, password);
                 console.log("LOGGED IN");
             }
         } catch(error){
