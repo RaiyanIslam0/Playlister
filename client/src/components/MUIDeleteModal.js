@@ -80,24 +80,7 @@ export default function MUIDeleteModal() {
               playlist?
             </Typography>
           </Box>
-          {/* <Button
-            sx={{
-              opacity: 0.7,
-              color: "#8932CC",
-              backgroundColor: "#CBC3E3",
-              fontSize: 13,
-              fontWeight: "bold",
-              border: 2,
-              p: "5px",
-              mt: "60px",
-              mr: "95px",
-            }}
-            variant="outlined"
-            onClick={handleDeleteList}
-          >
-            {" "}
-            Confirm{" "}
-          </Button> */}
+          
           <Button
             variant="contained"
             color="inherit"
@@ -115,25 +98,7 @@ export default function MUIDeleteModal() {
             Confirm
           </Button>
 
-          {/* <Button
-            sx={{
-              opacity: 0.5,
-              color: "#8932CC",
-              backgroundColor: "#CBC3E3",
-              fontSize: 13,
-              fontWeight: "bold",
-              border: 2,
-              p: "5px",
-              mt: "60px",
-              ml: "102px",
-            }}
-            variant="outlined"
-            onClick={handleCloseModal}
-          >
-            {" "}
-            Cancel{" "}
-          </Button> */}
-
+          
           <Button
             variant="contained"
             color="inherit"
