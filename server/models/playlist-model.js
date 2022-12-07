@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 /*
     This is where we specify the format of the data we're going to put into
     the database.
@@ -10,6 +10,7 @@ const playlistSchema = new Schema(
   {
     name: { type: String, required: true },
     ownerEmail: { type: String, required: true },
+    ownerUserName: { type: String, required: true },
     songs: {
       type: [
         {
@@ -38,4 +39,4 @@ const playlistSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Playlist', playlistSchema)
+module.exports = mongoose.model("Playlist", playlistSchema);

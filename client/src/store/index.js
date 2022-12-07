@@ -35,6 +35,7 @@ export const GlobalStoreActionType = {
   DUPLICATE_LIST: "DUPLICATE_LIST",
   SORT_BY: "SORT_BY",
   SET_PLAYER: "SET_PLAYER",
+  SET_PLAYER_LIST: "SET_PLAYER_LIST",
 };
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -178,7 +179,7 @@ function GlobalStoreContextProvider(props) {
               listNameActive: false,
               listIdMarkedForDeletion: null,
               listMarkedForDeletion: null,
-              playerList: payload,
+              playerList: store.playerList,
               player: store.player,
             });
           }
@@ -274,6 +275,21 @@ function GlobalStoreContextProvider(props) {
               player: payload,
             });
           }
+          case GlobalStoreActionType.SET_PLAYER_LIST: {
+            return setStore({
+              currentModal: CurrentModal.NONE,
+              idNamePairs: store.idNamePairs,
+              currentList: store.currentList,
+              currentSongIndex: store.currentSongIndex,
+              currentSong: store.currentSong,
+              newListCounter: store.newListCounter,
+              listNameActive: false,
+              listIdMarkedForDeletion: null,
+              listMarkedForDeletion: null,
+              playerList: payload,
+              player: store.player,
+            });
+          }
           default:
             return store;
         }
@@ -321,7 +337,10 @@ function GlobalStoreContextProvider(props) {
                                         playlist: playlist
                                     }
                                 });
-                                store.setCurrentList(id);
+                               //store.setCurrentList(id);
+                               if (playlist._id == store.playerList._id) {
+                                    document.getElementById('player-list-name').innerHTML = playlist.name;
+                                }
                             }
                         }
                         getListPairs(playlist);
@@ -331,6 +350,7 @@ function GlobalStoreContextProvider(props) {
             }
         }
         asyncChangeListName(id);
+        history.push("/");
     }
 
     // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
@@ -397,6 +417,7 @@ function GlobalStoreContextProvider(props) {
                         console.log(response2.data)
                         history.push("/playlist/" + response2.data.id);
                         history.push("/");
+                        store.goHome();
                     }
                 } else {
                     console.log("API FAILED TO CREATE A NEW LIST");
@@ -413,12 +434,32 @@ function GlobalStoreContextProvider(props) {
         let search = searchBar.value.toLowerCase();
         return name.includes(search);
       };
+      let searchFilter2 = function (idNamePair) {
+        let user = idNamePair.ownerUserName.toLowerCase();
+        let search = searchBar.value.toLowerCase();
+        return user.includes(search);
+      };
+      let publishedFilter = function (idNamePair) {
+        return idNamePair.published;
+      };
       if (searchBar.value != "") {
-        let response = await api.getPlaylistPairs();
+        let response;
+        if (auth.view === "HOME") {
+          response = await api.getPlaylistPairs();
+        } else {
+          response = await api.getPlaylists();
+        }
+
         if (response.data.success) {
           let pairsArray = response.data.idNamePairs;
-          store.idNamePairs = pairsArray.filter(searchFilter);
-          console.log(store.idNamePairs);
+          if (auth.view === "ALL_LISTS" || auth.view === "USERS") {
+            pairsArray = pairsArray.filter(publishedFilter);
+          }
+          if (auth.view === "USERS") {
+            store.idNamePairs = pairsArray.filter(searchFilter2);
+          } else {
+            store.idNamePairs = pairsArray.filter(searchFilter);
+          } 
         }
       } else {
         store.loadIdNamePairs();
@@ -448,14 +489,55 @@ function GlobalStoreContextProvider(props) {
       asyncUpdateCurrentList();
     };
 
+    store.comment = function () {
+      if (auth.user && store.playerList) {
+        if (document.getElementById("comment-text-field").value != "") {
+          async function asyncUpdateCurrentList() {
+            console.log(store.playerList);
+            console.log(auth.user.userName);
+            store.playerList.comments.push({
+              comment: document.getElementById("comment-text-field").value,
+              user: auth.user.userName,
+            });
+            const response = await api.updatePlaylistById(
+              store.playerList._id,
+              store.playerList
+            );
+            if (response.data.success) {
+              console.log(store.playerList.comments);
+              history.push("/");
+            }
+          }
+          asyncUpdateCurrentList();
+        }
+      }
+    };
+
      store.publishDateSort = async function () {
        store.idNamePairs.sort(function (a, b) {
          if (!a.published) return 1;
          if (!b.published) return -1;
-         return new Date(b.date) - new Date(a.date);
+         return new Date(b.publishDate) - new Date(a.publishDate);
        });
        history.push("/");
      };
+
+     store.createdDateSort = async function () {
+       store.idNamePairs.sort(function (a, b) {
+         return new Date(b.createdAt) - new Date(a.createdAt);
+       });
+       history.push("/");
+     };
+
+     store.editedDateSort = async function () {
+       store.idNamePairs.sort(function (a, b) {
+         return new Date(b.updatedAt) - new Date(a.updatedAt);
+       });
+       history.push("/");
+     };
+
+
+
      store.nameSort = async function () {
        store.idNamePairs.sort(function (a, b) {
          if (a.name.toLowerCase() < b.name.toLowerCase()) {
@@ -494,19 +576,181 @@ function GlobalStoreContextProvider(props) {
        });
      };
 
+     store.setPlayerList = function (id) {
+       async function asyncSetPlayerList(id) {
+         let response = await api.getPlaylistById(id);
+         if (response.data.success) {
+           let playlist = response.data.playlist;
+           if (playlist.songs.length == 0) {
+             document.getElementById("player-song-number").innerHTML = 0;
+           } else {
+             if (store.playerList) {
+               if (store.playerList._id != playlist._id) {
+                 document.getElementById("player-song-number").innerHTML = 1;
+               }
+             }
+           }
+           storeReducer({
+             type: GlobalStoreActionType.SET_PLAYER_LIST,
+             payload: playlist,
+           });
+           playlist.listens = playlist.listens + 1;
+           response = await api.updatePlaylistById(playlist._id, playlist);
+           if (response.data.success) {
+             document.getElementById(
+               "listens-counter-" + playlist._id
+             ).innerHTML = playlist.listens;
+           }
+           //history.push("/playlist/" + playlist._id);
+           history.push("/");
+         }
+       }
+       asyncSetPlayerList(id);
+     };
+
+     store.goHome = function () {
+       auth.goHome();
+       async function asyncLoadIdNamePairs() {
+         let response = await api.getPlaylistPairs();
+         if (response.data.success) {
+           let pairsArray = response.data.idNamePairs;
+           pairsArray.sort(function (a, b) {
+             return new Date(b.createdAt) - new Date(a.createdAt);
+           });
+
+           storeReducer({
+             type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+             payload: pairsArray,
+           });
+         } else {
+           console.log("API FAILED TO GET THE LIST PAIRS");
+         }
+       }
+       asyncLoadIdNamePairs();
+     };
+     store.goAllLists = function () {
+       auth.goAllLists();
+       async function asyncLoadIdNamePairs() {
+         let publishedFilter = function (idNamePair) {
+           return idNamePair.published;
+         };
+         let response = await api.getPlaylists();
+         if (response.data.success) {
+           let pairsArray = response.data.idNamePairs;
+           pairsArray = pairsArray.filter(publishedFilter);
+           console.log(pairsArray);
+           pairsArray.sort(function (a, b) {
+             if (!a.published) return 1;
+             if (!b.published) return -1;
+             return new Date(b.publishDate) - new Date(a.publishDate);
+           });
+
+           storeReducer({
+             type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+             payload: pairsArray,
+           });
+         } else {
+           console.log("API FAILED TO GET THE LIST PAIRS");
+         }
+       }
+       asyncLoadIdNamePairs();
+     };
+     store.goUsers = function () {
+       auth.goUsers();
+       async function asyncLoadIdNamePairs() {
+         let publishedFilter = function (idNamePair) {
+           return idNamePair.published;
+         };
+         let response = await api.getPlaylists();
+         if (response.data.success) {
+           let pairsArray = response.data.idNamePairs;
+           pairsArray = pairsArray.filter(publishedFilter);
+           pairsArray.sort(function (a, b) {
+             if (!a.published) return 1;
+             if (!b.published) return -1;
+             return new Date(b.publishDate) - new Date(a.publishDate);
+           });
+
+           storeReducer({
+             type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+             payload: pairsArray,
+           });
+         } else {
+           console.log("API FAILED TO GET THE LIST PAIRS");
+         }
+       }
+       asyncLoadIdNamePairs();
+     };
+
+
+     store.like = function () {
+       if (store.playerList) {
+         async function asyncUpdateCurrentList() {
+           store.playerList.likes = store.playerList.likes + 1;
+           console.log(store.playerList.likes);
+           const response = await api.updatePlaylistById(
+             store.playerList._id,
+             store.playerList
+           );
+           if (response.data.success) {
+             console.log("like-counter-" + store.playerList._id);
+             document.getElementById(
+               "like-counter-" + store.playerList._id
+             ).innerHTML = store.playerList.likes;
+             history.push("/");
+           }
+         }
+         asyncUpdateCurrentList();
+       }
+     };
+     store.dislike = function () {
+       if (auth.user && store.playerList) {
+         async function asyncUpdateCurrentList() {
+           store.playerList.dislikes = store.playerList.dislikes + 1;
+           const response = await api.updatePlaylistById(
+             store.playerList._id,
+             store.playerList
+           );
+           if (response.data.success) {
+             document.getElementById(
+               "dislike-counter-" + store.playerList._id
+             ).innerHTML = store.playerList.dislikes;
+             history.push("/");
+           }
+         }
+         asyncUpdateCurrentList();
+       }
+     };
+
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = function () {
         async function asyncLoadIdNamePairs() {
-            const response = await api.getPlaylistPairs();
+            let response;
+            if (auth.view === "HOME") {
+              response = await api.getPlaylistPairs();
+            } else {
+              response = await api.getPlaylists();
+            }
             if (response.data.success) {
                 let pairsArray = response.data.idNamePairs;
-                console.log(pairsArray);
-                pairsArray.sort(function (a, b) {
-                  if (!a.published) return 1;
-                  if (!b.published) return -1;
-                  return new Date(b.date) - new Date(a.date);
-                });
+                if (auth.view === "HOME") {
+                  pairsArray.sort(function (a, b) {
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                  });
+                } else {
+                  pairsArray.filter(function (idNamePair) {
+                    return idNamePair.published;
+                  });
+                  pairsArray.sort(function (a, b) {
+                    if (!a.published) return 1;
+                    if (!b.published) return -1;
+                    return (
+                      new Date(b.publishDate) - new Date(a.publishDate).filter
+                    );
+                  });
+                }
+
                 storeReducer({
                     type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                     payload: pairsArray
@@ -591,38 +835,21 @@ function GlobalStoreContextProvider(props) {
     // FUNCTIONS ARE setCurrentList, addMoveItemTransaction, addUpdateItemTransaction,
     // moveItem, updateItem, updateCurrentList, undo, and redo
     store.setCurrentList = function (id) {
-        async function asyncSetCurrentList(id) {
-            let response = await api.getPlaylistById(id);
-            if (response.data.success) {
-                let playlist = response.data.playlist;
+      async function asyncSetCurrentList(id) {
+        let response = await api.getPlaylistById(id);
+        if (response.data.success) {
+          let playlist = response.data.playlist;
 
-                response = await api.updatePlaylistById(playlist._id, playlist);
-                if (response.data.success) {
-                    if (playlist.songs.length == 0) {
-                      document.getElementById(
-                        "player-song-number"
-                      ).innerHTML = 0;
-                    } else {
-                      if (store.playerList) {
-                        if (store.playerList._id != playlist._id) {
-                          document.getElementById(
-                            "player-song-number"
-                          ).innerHTML = 1;
-                        }
-                      }
-                    }
-                    storeReducer({
-                        type: GlobalStoreActionType.SET_CURRENT_LIST,
-                        payload: playlist
-                    });
-                    //history.push("/playlist/" + playlist._id);
-                    history.push("/");
-                }
-            }
+          storeReducer({
+            type: GlobalStoreActionType.SET_CURRENT_LIST,
+            payload: playlist,
+          });
+          //history.push("/playlist/" + playlist._id);
+          history.push("/");
         }
-        asyncSetCurrentList(id);
-    }
-
+      }
+      asyncSetCurrentList(id);
+    };
     store.getPlaylistSize = function() {
         return store.currentList.songs.length;
     }

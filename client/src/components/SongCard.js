@@ -67,8 +67,8 @@ function SongCard(props) {
   }
 
   let cardClass = "list-card unselected-list-card";
-  return (
-    /*<div
+  //return (
+  /*<div
             key={index}
             id={'song-' + index + '-card'}
             className={cardClass}
@@ -94,7 +94,7 @@ function SongCard(props) {
                 className="list-card-button"
                 onClick={handleRemoveSong}>{"\u2715"}</Button>
         </div>*/
-    /*
+  /*
         <div
         key={index}
         id={"song-" + index + "-card"}
@@ -145,6 +145,8 @@ function SongCard(props) {
 
 export default SongCard;
 */
+
+  /*
     <div
       key={index}
       id={"song-" + index + "-card"}
@@ -194,3 +196,56 @@ export default SongCard;
 }
 
 export default SongCard;
+*/
+
+  return (
+    <div
+      key={index}
+      id={"song-" + index + "-card"}
+      className={cardClass}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      draggable={!store.currentList.published}
+      //onClick={handleClick}
+      style={{ display: "flex", justifyContent: "space-between" }}
+    >
+      <ThemeProvider theme={theme}>
+        <div>
+          {index + 1}.{song.title} by {song.artist}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            width: "11%",
+            justifyContent: "space-between",
+          }}
+        >
+          <Fab
+            color="purple"
+            aria-label="edit"
+            id={"edit-song-" + index}
+            onClick={handleEditSong}
+            style={style}
+          >
+            <EditIcon />
+          </Fab>
+          <Fab
+            color="purple"
+            aria-label="remove"
+            id={"remove-song-" + index}
+            onClick={handleRemoveSong}
+            style={style}
+          >
+            <CloseIcon />
+          </Fab>
+        </div>
+      </ThemeProvider>
+    </div>
+  );
+}
+
+export default SongCard;
+
