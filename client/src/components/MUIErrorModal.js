@@ -1,39 +1,33 @@
-import { useContext, useState } from 'react'
-import GlobalStoreContext from '../store';
-import * as React from 'react';
-import Modal from '@mui/material/Modal';
-import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import AuthContext from '../auth'
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    height: 200,
-    width: 400,
-    border: '5px solid yellow',
-    fontSize: "20px",
-    p: 4
-};
-
+import { useContext } from "react";
+import AuthContext from "../auth";
+import * as React from "react";
+import Modal from "@mui/material/Modal";
+import Stack from "@mui/material/Stack";
+import { Alert } from "@mui/material";
+import AlertTitle from "@mui/material/AlertTitle";
+import Button from "@mui/material/Button";
 
 export default function MUIErrorModal() {
-    const { store } = useContext(GlobalStoreContext);
-    const { auth } = useContext(AuthContext)
+  const { auth } = useContext(AuthContext);
+  let message = auth.errorMessage;
+  function handleCloseModal(event) {
+    auth.hideModal();
+  }
 
-    function handleCloseButton() {
-        store.hideModals();
-        console.log("CLOSE BUTTON CLICKED");
-    }
-
-    return (
-        <Modal open = {auth.errorMessage !== null}>
-         <Alert sx={style} severity="warning">{auth.errorMessage}
-         <Button sx={{color:"black", mt:"20px", ml:"85px", fontSize: 13, fontWeight: 'bold', border: 2}}variant="outlined" onClick={handleCloseButton}>Close</Button>
-         </Alert>
-        </Modal>
-    );
+  return (
+    <Modal open={auth.errorMessage !== ""}>
+      <Stack
+        sx={{ width: "40%", marginLeft: "30%", marginTop: "20%" }}
+        spacing={2}
+      >
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {message}
+          <Button color="primary" size="small" onClick={handleCloseModal}>
+            Close
+          </Button>
+        </Alert>
+      </Stack>
+    </Modal>
+  );
 }

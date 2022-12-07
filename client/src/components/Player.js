@@ -97,28 +97,33 @@ const Player = () => {
       id="player-container"
       style={{
         float: "right",
-        width: "40%",
-        height: "100%",
-        backgroundColor: "#404040",
+        width: "39%",
+        marginRight: "7px",
+        marginTop: "2px",
+        height: "528px",
+        backgroundColor: "#c5c5ea",
+        borderRadius: "10px 10px 10px 10px",
+        border: "0.6px solid black",
       }}
     >
       <div
         style={{
-          backgroundColor: "#252525",
-          color: "whitesmoke",
+          backgroundColor: "lightgrey",
+          color: "black",
           display: "flex",
         }}
       >
         <div
           style={{
             cursor: "pointer",
-            backgroundColor: "#404040",
+            backgroundColor: "lightgrey",
             padding: "0px 8px 0px 12px",
+            paddingLeft: "2px",
             fontSize: 24,
-            borderTop: "0px solid red",
-            borderLeft: "0px solid red",
-            borderRight: "0px solid red",
             borderRadius: "8px 8px 0px 0px",
+            border: "0.8px solid black",
+            width: "90px",
+            textAlign: "center",
           }}
           onClick={handleHideComments}
         >
@@ -127,13 +132,14 @@ const Player = () => {
         <div
           style={{
             cursor: "pointer",
-            backgroundColor: "#404040",
-            padding: "0px 8px 0px 8px",
+            backgroundColor: "lighgrey",
+            padding: "0px 10px 0px 8px",
+            paddingLeft: "2px",
             fontSize: 24,
-            borderTop: "0px solid red",
-            borderLeft: "0px solid red",
-            borderRight: "0px solid red",
             borderRadius: "8px 8px 0px 0px",
+            border: "0.8px solid black",
+            width: "120px",
+            textAlign: "center",
           }}
           onClick={handleShowComments}
           disabled={!store.playerList}
@@ -147,18 +153,27 @@ const Player = () => {
           videoId={videoId}
           opts={opts}
           onReady={_onReady}
-          style={{ paddingLeft: 0 }}
           onEnd={handleVideoEnd}
         />
         <div
           style={{
-            padding: "5px 0px 5px 20px",
-            fontSize: "18px",
+            padding: "0px 0px 2px 30px",
+            fontSize: "17px",
             fontWeight: "bold",
-            color: "whitesmoke",
+            color: "black",
           }}
         >
           <div style={{ height: 10 }} />
+          <div
+            style={{
+              textAlign: "center",
+              paddingBottom: "7px",
+              marginLeft: "5px",
+            }}
+          >
+            Now Playing
+            <br />
+          </div>
           <div style={{ display: "flex" }}>
             Playlist:{" "}
             <div id="player-list-name" style={{ paddingLeft: 5 }}>
@@ -196,13 +211,15 @@ const Player = () => {
         >
           <div
             style={{
-              borderRadius: "10px",
-              backgroundColor: "#303030",
+              borderRadius: "8px",
+              backgroundColor: "white",
               fontSize: "36px",
               display: "flex",
-              color: "whitesmoke",
+              color: "black",
               justifyContent: "center",
-              width: "50%",
+              width: "80%",
+              border: "1px solid black",
+              marginTop: "20px",
             }}
           >
             <SkipPreviousRoundedIcon

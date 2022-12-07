@@ -1,6 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { GlobalStoreContext } from '../store'
-import Button from '@mui/material/Button';
+import React, { useContext, useState } from "react";
+import { GlobalStoreContext } from "../store";
 import Fab from "@mui/material/Fab";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
@@ -48,156 +47,26 @@ function SongCard(props) {
     store.addMoveSongTransaction(sourceIndex, targetIndex);
   }
   function handleRemoveSong(event) {
+    console.log("removing song");
     store.showRemoveSongModal(index, song);
+    console.log(store.currentModal);
   }
   /*function handleClick(event) {
         // DOUBLE CLICK IS FOR SONG EDITING
         if (event.detail === 2) {
-            console.log("double clicked");
             store.showEditSongModal(index, song);
         }
     }*/
   function handleEditSong(event) {
+    console.log("Editing song");
     store.showEditSongModal(index, song);
   }
-
   let style = { height: "10px", width: "35px", visibility: "visible" };
   if (store.currentList.published) {
     style = { height: "10px", width: "35px", visibility: "hidden" };
   }
 
   let cardClass = "list-card unselected-list-card";
-  //return (
-  /*<div
-            key={index}
-            id={'song-' + index + '-card'}
-            className={cardClass}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            draggable="true"
-            onClick={handleClick}
-        >
-            {index + 1}.
-            <a
-                id={'song-' + index + '-link'}
-                className="song-link"
-                href={"https://www.youtube.com/watch?v=" + song.youTubeId}>
-                {song.title} by {song.artist}
-            </a>
-            <Button
-                sx={{transform:"translate(-5%, -5%)", width:"5px", height:"30px"}}
-                variant="contained"
-                id={"remove-song-" + index}
-                className="list-card-button"
-                onClick={handleRemoveSong}>{"\u2715"}</Button>
-        </div>*/
-  /*
-        <div
-        key={index}
-        id={"song-" + index + "-card"}
-        className={cardClass}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        draggable="true"
-        //onClick={handleClick}
-        style={{ display: "flex", justifyContent: "space-between" }}
-      >
-        <div>
-          {index + 1}.
-          <a
-            id={"song-" + index + "-link"}
-            className="song-link"
-            target="_blank"
-            href={"https://www.youtube.com/watch?v=" + song.youTubeId}
-          >
-            {song.title} by {song.artist}
-          </a>
-        </div>
-        <div style={{display: 'flex', width: '11%', justifyContent: 'space-between'}}>
-          <Fab
-            color="primary"
-            aria-label="edit"
-            id={"edit-song-" + index}
-            onClick={handleEditSong}
-            style={{ height: "10px", width: "35px" }}
-          >
-            <EditIcon />
-          </Fab>
-          <Fab
-            color="primary"
-            aria-label="remove"
-            id={"remove-song-" + index}
-            onClick={handleRemoveSong}
-            style={{ height: "10px", width: "35px" }}
-          >
-            <CloseIcon />
-          </Fab>
-        </div>
-      </div>
-    );
-}
-
-export default SongCard;
-*/
-
-  /*
-    <div
-      key={index}
-      id={"song-" + index + "-card"}
-      className={cardClass}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-      draggable={!store.currentList.published}
-      //onClick={handleClick}
-      style={{ display: "flex", justifyContent: "space-between" }}
-    >
-      <ThemeProvider theme={theme}>
-        <div>
-          {index + 1}.{song.title} by {song.artist}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            width: "11%",
-            justifyContent: "space-between",
-          }}
-        >
-          <Fab
-            color="purple"
-            aria-label="edit"
-            id={"edit-song-" + index}
-            onClick={handleEditSong}
-            style={style}
-          >
-            <EditIcon />
-          </Fab>
-          <Fab
-            color="purple"
-            aria-label="remove"
-            id={"remove-song-" + index}
-            onClick={handleRemoveSong}
-            style={style}
-          >
-            <CloseIcon />
-          </Fab>
-        </div>
-      </ThemeProvider>
-    </div>
-  );
-}
-
-export default SongCard;
-*/
-
   return (
     <div
       key={index}
@@ -210,7 +79,7 @@ export default SongCard;
       onDrop={handleDrop}
       draggable={!store.currentList.published}
       //onClick={handleClick}
-      style={{ display: "flex", justifyContent: "space-between" }}
+      style={{ display: "flex", justifyContent: "space-between" , color:"white", fontWeight:"bold"}}
     >
       <ThemeProvider theme={theme}>
         <div>
@@ -221,10 +90,12 @@ export default SongCard;
             display: "flex",
             width: "11%",
             justifyContent: "space-between",
+            marginRight:"4px",
+            color:"black"
           }}
         >
           <Fab
-            color="purple"
+            color="inherit"
             aria-label="edit"
             id={"edit-song-" + index}
             onClick={handleEditSong}
@@ -233,7 +104,7 @@ export default SongCard;
             <EditIcon />
           </Fab>
           <Fab
-            color="purple"
+            color="inherit"
             aria-label="remove"
             id={"remove-song-" + index}
             onClick={handleRemoveSong}
@@ -248,4 +119,3 @@ export default SongCard;
 }
 
 export default SongCard;
-

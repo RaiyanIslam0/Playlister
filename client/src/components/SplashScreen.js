@@ -3,9 +3,12 @@ import { Button, createTheme, Grid, Stack, ThemeProvider } from "@mui/material";
  import { useContext } from "react";
  import { Link, useHistory } from "react-router-dom";
  import GlobalStoreContext from "../store";
+ import AuthContext from "../auth";
+
  export default function SplashScreen() {
    const { store } = useContext(GlobalStoreContext);
    const history = useHistory();
+  const { auth } = useContext(AuthContext);
 
    function handleRegister() {
      history.push("/register/");
@@ -15,9 +18,9 @@ import { Button, createTheme, Grid, Stack, ThemeProvider } from "@mui/material";
      history.push("/login/");
    }
 
-   function handleGuest() {
-     history.push("/");
-   }
+   //function handleGuest() {
+    // history.push("/");
+   //}
 
    return (
      <div id="splash-screen">
@@ -68,9 +71,13 @@ import { Button, createTheme, Grid, Stack, ThemeProvider } from "@mui/material";
              backgroundColor: "lightgrey",
              borderColor: "deepgrey",
            }}
-           onClick={handleGuest}
+           onClick={(e) => {
+             e.preventDefault();
+             auth.useAsGuest();
+             store.loadIdNamePairs();
+           }}
          >
-           Continue as Guest
+            Continue as Guest
          </Button>
        </div>
        <p id="creditText">By Raiyan Islam for CSE 316</p>

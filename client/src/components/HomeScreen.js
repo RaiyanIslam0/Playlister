@@ -1,16 +1,13 @@
-import React, { useContext, useEffect } from 'react'
-import { GlobalStoreContext } from '../store'
-import ListCard from './ListCard.js'
-import MUIDeleteModal from './MUIDeleteModal'
-import MenuBanner from './MenuBanner'
-import YoutubePlayer from './YoutubePlayer'
+import React, { useContext, useEffect } from "react";
+import { GlobalStoreContext } from "../store";
 import AuthContext from "../auth";
-
-import AddIcon from '@mui/icons-material/Add';
-import Fab from '@mui/material/Fab'
-import List from '@mui/material/List';
-import Box from '@mui/material/Box'
-import { width } from "@mui/system";
+import ListCard from "./ListCard.js";
+import MUIDeleteModal from "./MUIDeleteModal";
+import PageBanner from "./PageBanner";
+import Player from "./Player";
+import AddIcon from "@mui/icons-material/Add";
+import Fab from "@mui/material/Fab";
+import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 /*
     This React component lists all the top5 lists in the UI.
@@ -28,10 +25,11 @@ const HomeScreen = () => {
   function handleCreateNewList() {
     store.createNewList();
   }
+
   let listCard = "";
   if (store) {
     listCard = (
-      <List sx={{ width: "100%", bgcolor: "background.paper", mb: "20px" }}>
+      <List sx={{ width: "90%", left: "5%", bgcolor: "lightgrey" }}>
         {store.idNamePairs.map((pair) => (
           <ListCard
             key={pair._id}
@@ -40,18 +38,10 @@ const HomeScreen = () => {
             expanded={false}
           />
         ))}
-        {/* <Fab sx={{transform:"translate(1150%, 10%)"}}
-                color="primary" 
-                aria-label="add"
-                id="add-list-button"
-                onClick={handleCreateNewList}
-            >
-                <AddIcon />
-            </Fab> */}
       </List>
     );
+    console.log(store.idNamePairs);
   }
-
   let heading = <div id="list-selector-heading"></div>;
   console.log(auth);
   if (auth) {
@@ -66,46 +56,34 @@ const HomeScreen = () => {
           >
             <AddIcon />
           </Fab>
-          <Typography variant="h2">Your Lists</Typography>
+          <Typography variant="h3">Your Lists</Typography>
         </div>
       );
     } else if (auth.view === "ALL_LISTS") {
       heading = (
         <div id="list-selector-heading">
-          <Typography variant="h2">All Lists</Typography>
+          <Typography variant="h3">All Lists</Typography>
         </div>
       );
     } else if (auth.view === "USERS") {
       heading = (
         <div id="list-selector-heading">
-          <Typography variant="h2">Users</Typography>
+          <Typography variant="h3">Users</Typography>
         </div>
       );
     }
   }
   return (
     <div>
-      <MenuBanner />
+      <PageBanner />
       <div id="playlist-selector">
-        {/* <div id="list-selector-heading">
-          <Fab
-            color="primary"
-            aria-label="add"
-            id="add-list-button"
-            onClick={handleCreateNewList}
-          >
-            <AddIcon />
-          </Fab>
-          <Typography variant="h3">Your Lists</Typography>
-        </div> */}
         {heading}
         <div id="list-selector-list">
           {listCard}
           <MUIDeleteModal />
         </div>
-        <YoutubePlayer />
+        <Player />
       </div>
-      <div id="player"></div>
     </div>
   );
 };

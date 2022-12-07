@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
+
 export default function AppBanner() {
   const { auth } = useContext(AuthContext);
   const { store } = useContext(GlobalStoreContext);
@@ -31,9 +32,10 @@ export default function AppBanner() {
   const handleLogout = () => {
     handleMenuClose();
     auth.logoutUser();
+    store.closeCurrentList();
   };
 
-  const handleHouseClick = () => {
+  const handleCloseList = () => {
     store.closeCurrentList();
   };
 
@@ -62,6 +64,10 @@ export default function AppBanner() {
       </MenuItem>
     </Menu>
   );
+  let menuMsg = "Logout";
+  if (auth.visitor === "GUEST") {
+    menuMsg = "Return To Start Screen";
+  }
   const loggedInMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -78,7 +84,7 @@ export default function AppBanner() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      <MenuItem onClick={handleLogout}>{menuMsg}</MenuItem>
     </Menu>
   );
 
@@ -90,23 +96,21 @@ export default function AppBanner() {
       editToolbar = <EditToolbar />;
     }
   }
-  const handleCloseList = () => {
-    store.closeCurrentList();
-  };
 
   function getAccountMenu(loggedIn) {
     let userInitials = auth.getUserInitials();
     console.log("userInitials: " + userInitials);
-    if (loggedIn) return <div>{userInitials}</div>;
+    if (loggedIn && auth.vistor === "REGISTERED")
+      return <div>{userInitials}</div>;
     else return <AccountCircle />;
   }
-  //if(auth.loggedIn){
+
   return (
     <Box style={{}} sx={{ flexGrow: 1 }}>
       <AppBar
         position="static"
         id="AppBanner"
-        style={{ backgroundColor: "grey",height:"55px" }}
+        style={{ backgroundColor: "grey", height: "55px" }}
       >
         <Toolbar>
           <Typography
@@ -124,13 +128,13 @@ export default function AppBanner() {
                 src={
                   "https://piazza.com/redirect/s3?bucket=uploads&prefix=paste%2Fk0ejaa6849h7ke%2F22c8d90eaf4003c2c24ca0fad72a1df99841f1b617601341110fbb45df72547a%2FScreen_Shot_2022-11-08_at_5.00.49_PM-removebg-preview.png"
                 }
-                style={{ height: "45px", marginTop: "2%",marginLeft:"-20px" }}
+                style={{ height: "45px", marginTop: "2%", marginLeft: "-20px" }}
                 alt="⬠"
               />
             </Link>
           </Typography>
-          <Box sx={{ flexGrow: 1 }}>{editToolbar}</Box>
-          <Box sx={{ height: "30px",color:"black", display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1 }}></Box>
+          <Box variant="outlined" sx={{ height: "30px",color:"black", display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"
               edge="end"
@@ -148,9 +152,9 @@ export default function AppBanner() {
       {menu}
     </Box>
   );
-  //}
-  //else{
-  //   return null;
-
-  //}
 }
+
+
+
+
+

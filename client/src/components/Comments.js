@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { GlobalStoreContext } from "../store/index.js";
-import CommentPlayer from "./CommentPlayer";
+import CommentCard from "./CommentCard";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import { TextField } from "@mui/material";
@@ -18,7 +18,7 @@ function Comments() {
         sx={{ width: "100%", height: "73%", bgcolor: "#404040" }}
       >
         {store.playerList.comments.map((comment, index) => (
-          <CommentPlayer
+          <CommentCard
             id={"comment-" + index}
             key={"comment-" + index}
             comment={comment}
