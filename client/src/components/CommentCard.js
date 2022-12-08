@@ -8,19 +8,22 @@ function CommentCard(props) {
   return (
     <div
       style={{
-        color: "whitesmoke",
-        fontSize: "18pt",
+        fontSize: "15pt",
         margin: "10px",
         padding: "20px",
         borderRadius: "25px",
-        backgroundColor: "#353535",
+        backgroundColor: "#e3c21b",
+        color:"black",
+        border:"1px solid black"
       }}
     >
       <div
         style={{
-          fontStyle: "italic",
           fontSize: 16,
           padding: "0px 5px 5px 0px",
+          color:"blue",
+          fontWeight:"bold",
+          textDecoration:"underline",
         }}
       >
         {" "}

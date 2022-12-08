@@ -15,7 +15,7 @@ function Comments() {
     commentList = (
       <List
         id="comments"
-        sx={{ width: "100%", height: "73%", bgcolor: "#404040" }}
+        sx={{ width: "100%", height: "73%", backgroundColor: "#c5c5ea" }}
       >
         {store.playerList.comments.map((comment, index) => (
           <CommentCard
@@ -31,13 +31,20 @@ function Comments() {
   let commentTextField = "";
   if (store.playerList) {
     commentTextField = (
+      <div style={{ width: "40%", paddingTop: "5px" }}>
       <TextField
-        InputProps={{ sx: { width: 550, color: "whitesmoke" } }}
+        InputProps={{
+          sx: {
+            width: 420,
+            color: "black",
+            backgroundColor: "white",
+          },
+        }}
         id="comment-text-field"
         className="text"
-        label="Comment"
+        //label="Comment"
         variant="standard"
-        placeholder=""
+        placeholder="Add Comment"
         size="small"
         disabled={!store.playerList.published || auth.visitor === "GUEST"}
         style={{ paddingTop: 20 }}
@@ -47,15 +54,18 @@ function Comments() {
           }
         }}
       />
+      </div>
     );
   }
   return (
     <div
       style={{
-        width: "97%",
-        height: "100%",
-        backgroundColor: "transparent",
+        width: "95%",
+        height: "82.5%",
+        backgroundColor: "#c5c5ea",
         paddingLeft: 10,
+        color:"black"
+
       }}
     >
       {commentList}

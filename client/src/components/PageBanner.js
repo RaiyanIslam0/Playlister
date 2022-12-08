@@ -177,13 +177,14 @@ export default function PageBanner() {
                         width: 550,
                         color: "black",
                         backgroundColor: "white",
+                        fontWeight:"bold"
                       },
                     }}
                     id="search-bar"
                     className="text"
-                    label="Search"
+                    //label="Search"
                     variant="outlined"
-                    placeholder=""
+                    placeholder="Search"
                     size="small"
                     onKeyPress={(event) => {
                       if (event.key === "Enter") {
