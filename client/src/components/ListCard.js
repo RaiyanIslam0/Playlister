@@ -273,15 +273,6 @@ function ListCard(props) {
   if (store.playerList) {
     if (idNamePair._id == store.playerList._id) {
       cardStyle = {
-        // width: "100%",
-        // fontSize: "24pt",
-        // color: "whitesmoke",
-        // backgroundColor: "#bda71a",
-        // borderRadius: 8,
-        // display: "flex",
-        // flexDirection: "column",
-        // cursor: "default",
-
         width: "100%",
         fontSize: "22pt",
         color: "black",

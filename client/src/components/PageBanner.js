@@ -192,9 +192,7 @@ export default function PageBanner() {
                       }
                     }}
                   />
-                  {/* <IconButton aria-label="search" onClick={store.handleSearch}>
-                    <SearchIcon id="search-icon" style={{ fill: "black" }} />
-                  </IconButton> */}
+                  
                 </form>
               </div>
 

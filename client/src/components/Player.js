@@ -262,17 +262,6 @@ const Player = () => {
           borderRadius: 11,
         }}
       >
-        {/* <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            fontWeight: "bold",
-            fontSize: 24,
-            padding: "10px 5px 10px 5px",
-          }}
-        >
-          Comments <br />
-        </div> */}
         <Comments />
       </div>
     </div>

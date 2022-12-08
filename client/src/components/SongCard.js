@@ -51,12 +51,7 @@ function SongCard(props) {
     store.showRemoveSongModal(index, song);
     console.log(store.currentModal);
   }
-  /*function handleClick(event) {
-        // DOUBLE CLICK IS FOR SONG EDITING
-        if (event.detail === 2) {
-            store.showEditSongModal(index, song);
-        }
-    }*/
+  
   function handleEditSong(event) {
     console.log("Editing song");
     store.showEditSongModal(index, song);
@@ -78,7 +73,6 @@ function SongCard(props) {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       draggable={!store.currentList.published}
-      //onClick={handleClick}
       style={{ display: "flex", justifyContent: "space-between" , color:"white", fontWeight:"bold"}}
     >
       <ThemeProvider theme={theme}>
