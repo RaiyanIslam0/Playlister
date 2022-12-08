@@ -822,6 +822,13 @@ function GlobalStoreContextProvider(props) {
         });
         history.push('/');
     }
+    store.hideModals = () => {
+      auth.errorMessage = null;
+      storeReducer({
+        type: GlobalStoreActionType.HIDE_MODALS,
+        payload: {},
+      });
+    };
     store.listensSort = async function () {
         store.idNamePairs.sort(function(a, b){
             return b.listens - a.listens;
