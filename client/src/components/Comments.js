@@ -15,7 +15,7 @@ function Comments() {
     commentList = (
       <List
         id="comments"
-        sx={{ width: "100%", height: "73%", backgroundColor: "#c5c5ea" }}
+        sx={{ width: "100%", height: "100%", backgroundColor: "#c5c5ea" }}
       >
         {store.playerList.comments.map((comment, index) => (
           <CommentCard

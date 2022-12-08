@@ -113,7 +113,7 @@ const Player = () => {
           display: "flex",
         }}
       >
-        <div
+         <div
           style={{
             cursor: "pointer",
             backgroundColor: "lightgrey",
@@ -128,7 +128,8 @@ const Player = () => {
           onClick={handleHideComments}
         >
           Player
-        </div>
+        </div> 
+        
         <div
           style={{
             cursor: "pointer",
@@ -142,6 +143,7 @@ const Player = () => {
             textAlign: "center",
           }}
           onClick={handleShowComments}
+          onDoubleClick={handleHideComments}
           disabled={!store.playerList}
         >
           Comments
@@ -251,14 +253,16 @@ const Player = () => {
         style={{
           color: "whitesmoke",
           visibility: "hidden",
-          backgroundColor: "#353535",
-          height: "73%",
+          backgroundColor: "#c5c5ea",
+          height: "68%",
           position: "absolute",
-          width: "40%",
-          top: 155,
+          width: "39%",
+          top: 150,
+          border: "1px solid black",
+          borderRadius: 11,
         }}
       >
-        <div
+        {/* <div
           style={{
             display: "flex",
             justifyContent: "center",
@@ -268,7 +272,7 @@ const Player = () => {
           }}
         >
           Comments <br />
-        </div>
+        </div> */}
         <Comments />
       </div>
     </div>

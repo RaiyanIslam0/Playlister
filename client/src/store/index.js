@@ -815,7 +815,6 @@ function GlobalStoreContextProvider(props) {
         history.push('/')
     }
     store.nameSort = async function () {
-        console.log(store.idNamePairs);
         store.idNamePairs.sort(function(a, b){
             if(a.name.toLowerCase() < b.name.toLowerCase()) { return -1; }
             if(a.name.toLowerCase > b.name.toLowerCase) { return 1; }
